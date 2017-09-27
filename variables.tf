@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+variable project {
+  description = "The google project to put all the resources in"
+}
+
 variable name {
   description = "The name of the kubernetes cluster. Note that nodes names will be prefixed with `k8s-`"
 }

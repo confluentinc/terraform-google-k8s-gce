@@ -130,6 +130,7 @@ data "template_cloudinit_config" "node" {
 module "master-mig" {
   source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   name              = "${random_id.instance-prefix.hex}-master"
+  project           = "${var.project}"
   region            = "${var.region}"
   zone              = "${var.zone}"
   network           = "${var.network}"
@@ -155,6 +156,7 @@ module "master-mig" {
 module "default-pool-mig" {
   source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   name              = "${random_id.instance-prefix.hex}-default-pool"
+  project           = "${var.project}"
   region            = "${var.region}"
   zone              = "${var.zone}"
   network           = "${var.network}"
@@ -180,6 +182,7 @@ module "default-pool-mig" {
 resource "google_compute_firewall" "k8s-all" {
   name    = "${random_id.instance-prefix.hex}-all"
   network = "${var.network}"
+  project = "${var.project}"
 
   allow {
     protocol = "icmp"
@@ -211,6 +214,7 @@ resource "google_compute_firewall" "k8s-all" {
 resource "google_compute_firewall" "vms" {
   name    = "${random_id.instance-prefix.hex}-vms"
   network = "${var.network}"
+  project = "${var.project}"
 
   allow {
     protocol = "tcp"
@@ -229,5 +233,11 @@ resource "google_compute_firewall" "vms" {
 
 data "google_compute_subnetwork" "subnet" {
   name   = "${var.subnetwork}"
+  region = "${var.region}"
+  project = "${var.project}"
+}
+
+provider "google" {
+  project = "${var.project}"
   region = "${var.region}"
 }
